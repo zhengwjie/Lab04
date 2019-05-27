@@ -3,6 +3,7 @@ int temp=0;
 int light=1;
 byte mid[3];
 byte pwm[3];
+
 void setup() {
   // put your setup code here, to run once:
 Serial.begin(38400);
