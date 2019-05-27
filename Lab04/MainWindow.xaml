@@ -1,0 +1,97 @@
+﻿<Window x:Class="Lab04.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration" 
+        xmlns:local="clr-namespace:Lab04"
+        xmlns:zedgraph="clr-namespace:ZedGraph;assembly=ZedGraph"
+        mc:Ignorable="d"
+        Title="Arduino-MIDI控制器" Height="500" Width="1000">
+    <Grid Margin="2,0,-2,-21">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="270*"></ColumnDefinition>
+            <ColumnDefinition Width="477*"></ColumnDefinition>
+            <ColumnDefinition Width="245*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"></RowDefinition>
+            <RowDefinition Height="1.5*"></RowDefinition>
+            <RowDefinition Height="7*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ComboBox HorizontalAlignment="Left" Margin="43,42,0,0" VerticalAlignment="Top" Width="120" Text="选择串口名称" Grid.Row="0" Grid.Column="0" Name="combox1" SelectionChanged="select_PortName" GotFocus="comBox1_Focus" Height="21" KeyDown="comBox1_Focus"/>
+        <ComboBox HorizontalAlignment="Left" Margin="43,94,0,0" VerticalAlignment="Top" Width="120" Text="选择通讯速率" Grid.Row="0" Grid.Column="0" Name="combox2" SelectionChanged="select_PortBps" Height="21">
+            <ComboBoxItem>9600bps</ComboBoxItem>
+            <ComboBoxItem>19200bps</ComboBoxItem>
+            <ComboBoxItem>38400bps</ComboBoxItem>
+            <ComboBoxItem>57600bps</ComboBoxItem>
+        </ComboBox>
+        <Button Content="连接" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="75" Grid.Row="1" Margin="9,24,0,0" Name="connectBtn" Click="ConnectBtn_Click" Height="19"/>
+        <Button Content="断开" HorizontalAlignment="Left" Margin="120,24,0,0" VerticalAlignment="Top" Width="75" Grid.Row="1" Click="Button_Click" Height="19"/>
+        <StackPanel HorizontalAlignment="Left" Height="159" Margin="10,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="196">
+            <TextBox Height="20" TextWrapping="Wrap" Margin="0,5" Text="地址设定(1-255)" Name="TextBox1"/>
+            <TextBox Height="20" TextWrapping="Wrap" Margin="0,5" Text="设定寄存器号" Name="TextBox2"/>
+            <TextBox Height="20" TextWrapping="Wrap" Margin="0,5" Text="设定寄存器个数" Name="TextBox3"/>
+            <TextBox Height="20" TextWrapping="Wrap" Margin="0,5" Text="读内容设定" Name="TextBox4"/>
+            <TextBox Height="20" TextWrapping="Wrap" Margin="0,5" Text="写内容设定" Name="TextBox5"/>
+        </StackPanel>
+        <ListView HorizontalAlignment="Left" Height="115" Margin="0,25,0,0" VerticalAlignment="Top" Width="206" Name="listView1" Grid.Column="1"/>
+        <ListView Grid.Column="1" HorizontalAlignment="Left" Height="115" Margin="260,25,0,0" VerticalAlignment="Top" Width="200" Name="listView2"/>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Width="465" Grid.Row="1" Orientation="Horizontal" Margin="2,10,0,9">
+            <Label Content="温度" Width="63" VerticalAlignment="Center" Margin="0,8"/>
+            <TextBlock  Text="{Binding Path=Show,Mode=TwoWay}" Width="187" Name="Temp" Height="20" VerticalAlignment="Center" Block.TextAlignment="Left" Margin="0,12,0,8" />
+            <Label Content="光强" Width="60" VerticalAlignment="Center" Margin="0,8" />
+            <TextBlock Text="{Binding Show, Mode=TwoWay}" Width="140" x:Name="Inte" Block.TextAlignment="Left" Margin="0,12,0,10" />
+        </StackPanel>
+        <Canvas Grid.Column="1" Height="239" Margin="10,10,0,0" Grid.Row="2" VerticalAlignment="Top" >
+            <Grid HorizontalAlignment="Left" Height="304" VerticalAlignment="Top" Width="508">
+                <DataGrid HorizontalAlignment="Left" Width="232" Margin="-32,-19,0,90"/>
+                <wfi:WindowsFormsHost Margin="-32,-19,310,90" ChildChanged="WindowsFormsHost_ChildChanged">
+                    <zedgraph:ZedGraphControl x:Name="zedGraphControl1" BackColor="ActiveBorder" />
+                </wfi:WindowsFormsHost>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="304" VerticalAlignment="Top" Width="486">
+                <DataGrid HorizontalAlignment="Left" Width="230" Margin="244,-20,0,90"/>
+                <wfi:WindowsFormsHost Margin="240,-20,0,90" HorizontalAlignment="Left" Width="230">
+                    <zedgraph:ZedGraphControl x:Name="zedGraphControl2" BackColor="ActiveBorder" />
+                </wfi:WindowsFormsHost>
+            </Grid>
+
+        </Canvas>
+        <StackPanel Grid.Column="2" HorizontalAlignment="Left" Margin="10,0,0,0" Width="73">
+            <Label Height="33" Content="红灯"/>
+            <Label Height="33" Content="绿灯"/>
+            <Label Height="33" Content="黄灯"/>
+            <Label Height="33" Content="蓝灯"/>
+            <Label Height="33" Content="白灯"/>
+        </StackPanel>
+        <StackPanel Grid.Column="2" HorizontalAlignment="Left" Height="180" Margin="83,0,0,0" VerticalAlignment="Top" Width="133" Grid.RowSpan="2">
+            <Slider Height="33" Name="slider01" Maximum="255" ValueChanged="Color_Change" />
+            <Slider Height="33" Name="slider02" Maximum="255" ValueChanged="Color_Change"></Slider>
+            <Slider Height="33" Name="slider03" Maximum="255" ValueChanged="Color_Change"></Slider>
+            <Slider Height="33" Name="slider04" Maximum="255" ValueChanged="Color_Change"></Slider>
+            <Slider Height="33" Name="slider05" Maximum="255" ValueChanged="Color_Change"></Slider>
+        </StackPanel>
+        <Button Content="发送" Grid.Column="2" HorizontalAlignment="Left" Margin="85,52,0,0" Grid.Row="2" VerticalAlignment="Top" Width="89" Height="35" Click="Button_Click_1" />
+        <Button Content="log开始" Grid.Column="2" HorizontalAlignment="Left" Margin="40,171,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" Click="Button_Click_2" Height="19"/>
+        <Button Content="log结束" Grid.Column="2" Margin="143,171,28,0" Grid.Row="2"  VerticalAlignment="Top" Click="Button_Click_3" Height="19"/>
+        <Ellipse Margin="112,15,91,0" Grid.Column="2" Grid.Row="1"  Stroke="Yellow" StrokeThickness="40" Name="ShowColor" Width="40" Height="40"/>
+        <Label Content="发送的数据" Grid.Column="1" HorizontalAlignment="Left" Margin="2,2,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.465,0.41" Width="146"/>
+        <Label Content="接收的数据" Grid.Column="1" HorizontalAlignment="Left" Margin="258,2,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.465,0.41" Width="146"/>
+        <Button Content="停止接收" Grid.Column="2" HorizontalAlignment="Left" Margin="40,128,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" Click="Button_Click_4"/>
+        <Button Content="开始接收" Grid.Column="2" HorizontalAlignment="Left" Margin="142,128,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" Click="Button_Click_5"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </Grid>
+</Window>
